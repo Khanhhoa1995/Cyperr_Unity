@@ -1,19 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public GameObject helicopterPrefab;
-    //public GameObject dogPrefabs;
 
-    public List<GameObject> pooledObjects;
-    //public GameObject objectToPool;
-    public int amountToPool;
+    //public Helicopter helicopterPP;
+
+    public GameObject bulletFire;
+    public Transform firePos;
 
     public float minRate;
     public float maxRate;
+
+    public bool isGameActive = false;
+    public GameObject titleScreen;
+    public bool isFaceLeft;
 
     private void Awake()
     {
@@ -26,71 +30,65 @@ public class GameManager : MonoBehaviour
             instance = this;
         }    
     }
-    // Start is called before the first frame update
     void Start()
     {
-         InvokeRepeating("SpawnHelicopter", 4f, Random.Range(minRate,maxRate));
-       // SpawnHelicopterPooling();
+        isGameActive = true;
+         StartCoroutine(SpawnHeli());
     }
 
-    /// <summary>
-    // Object Pooling
-    private void SpawnHelicopterPooling()
+    IEnumerator SpawnHeli()
     {
-        pooledObjects = new List<GameObject>();
-        for (int i = 0; i < amountToPool; i++)
+        while (true)
         {
-            GameObject obj = (GameObject)Instantiate(helicopterPrefab);
-            obj.SetActive(false);
-            pooledObjects.Add(obj);
-        }
-    }
-    public GameObject GetHelicopterToPool()
-    {
-        Debug.Log("hoa GetHelicopterToPool ");
-        foreach (GameObject item in pooledObjects)
-        {
-            Debug.Log("hoa GetHelicopterToPool222 ");
-            if (!item.activeInHierarchy)
-            {
-                Debug.Log("hoa GetHelicopterToPool1111 ");
-                Vector2 spawnPosItem = Camera.main.ScreenToWorldPoint(RandomPosision());
-                item.transform.position = spawnPosItem;
-                item.SetActive(true);
-                return item;
-            }
+            yield return new WaitForSeconds(1);
+            //helicopterPP.SpawnHelicopter();
+            SpawnHelicopter();
         }
 
-        GameObject prefabInstance = Instantiate(helicopterPrefab);
-        Vector2 spawnPos = Camera.main.ScreenToWorldPoint(RandomPosision());
-        prefabInstance.transform.position = spawnPos;
-        pooledObjects.Add(prefabInstance);
-
-        return prefabInstance;
     }
 
-/// </summary>
+
+
+    public void GameStart()
+    {
+        isGameActive = true;
+       // InvokeRepeating("SpawnHeliCopter", 4f, Random.Range(minRate, maxRate));
+        //titleScreen.SetActive(false);
+        //SpawnHeliCopter();
+    }
+
 // Update is called once per frame
-void Update()
+    void Update()
     {
-
+        if (Input.GetMouseButtonDown(0))
+        {
+            //StartCoroutine(WaitToSpawnBullet());
+            Instantiate(bulletFire, firePos.position, firePos.rotation);
+        }
     }
-    // spawn Helicoper;
+
+    public void SpawnHelicopter()
+    {
+        GameObject helicopter = ObjectPooler.SharedInstance.GetPooledObject();
+        if (helicopter != null)
+        {
+            Vector2 spawnPoint = Camera.main.ScreenToWorldPoint(RandomPosision());
+            helicopter.transform.position = spawnPoint;
+            transform.position = helicopter.transform.position;
+            helicopter.SetActive(true);
+            //SetupPosition();
+        }
+    }
+
     private Vector2 RandomPosision()
     {
         float xPos = 0f;
         if (Random.Range(-1.0f, 1.0f) > 0)
         {
             xPos = Screen.width;
-        }       
-        Vector2 point = new Vector3(xPos, Random.Range(Screen.height /1.5f, (Screen.height / (1.05f))));
+        }
+        Vector2 point = new Vector3(xPos, Random.Range(Screen.height / 1.5f, (Screen.height / (1.05f))));
         return point;
     }
-    private void SpawnHelicopter()
-    {
-        Vector2 spawnPoint = Camera.main.ScreenToWorldPoint(RandomPosision());
-        helicopterPrefab.transform.position = spawnPoint;
-        Instantiate(helicopterPrefab);
-    }  
-    
+
 }
