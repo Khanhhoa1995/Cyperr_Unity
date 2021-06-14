@@ -11,7 +11,6 @@ public class BulletFire : MonoBehaviour
     void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
-        // rb2D.velocity = transform.up * speed;
         isFire = true;
         rb2D.isKinematic = false;
         rb2D.velocity = transform.up * speed;
@@ -20,23 +19,18 @@ public class BulletFire : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    isFire = true;
-        //    rb2D.isKinematic = false;
-        //    rb2D.velocity = transform.up * speed;
-        //}
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.gameObject.CompareTag("Helicopter"))
-        {
-            Destroy(gameObject);
-        }
-        if(collision.gameObject.CompareTag("Dog"))
+        float posY = Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y;
+        float posX = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x;
+        if (transform.position.y > posY || transform.position.x > posX || transform.position.x < -posX) 
         {
             Destroy(gameObject);
         }    
-        // do something helicopter/ solider.
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("Helicopter") || collision.gameObject.CompareTag("Dog"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

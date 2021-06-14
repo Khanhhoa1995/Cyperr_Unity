@@ -62,7 +62,6 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //StartCoroutine(WaitToSpawnBullet());
             Instantiate(bulletFire, firePos.position, firePos.rotation);
         }
     }

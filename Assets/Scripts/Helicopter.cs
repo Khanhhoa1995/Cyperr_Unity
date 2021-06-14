@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class Helicopter : MonoBehaviour
 {
-    public Rigidbody2D rb2D;
+    private Rigidbody2D rb2D;
     [SerializeField]
     private float DefaultSpeed;
     private float speed;
     public GameObject dogPrefabs;
     public float minSpawnDog;
     public float maxSpawnDog;
-    public SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer;
 
-
+    private Animator anim;
+    public ParticleSystem particalSystem;
     private void Awake()
     {
         rb2D = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-       
+        anim = GetComponent<Animator>();
+        //particalSystem = GetComponent<ParticleSystem>();
     }
 
     private void OnEnable()
@@ -70,9 +72,16 @@ public class Helicopter : MonoBehaviour
         }
         if(collision.gameObject.CompareTag("BulletFire"))
         {
-
+           StartCoroutine(PlayAnimAndWaitDestroy());
         }    
     }
+    private IEnumerator PlayAnimAndWaitDestroy()
+    {
+        anim.SetBool("isFired", true);
+        particalSystem.Play();
+        yield return new WaitForSeconds(0.45f);
+        gameObject.SetActive(false);
+     }    
 
 
 }
