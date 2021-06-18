@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
     public GameObject titleScreen;
     public bool isFaceLeft;
 
+    public Text ScoreText;
+    public Text ScoreGameOver;
+    private int score;
+
+    public GameObject gameOver;
     private void Awake()
     {
         if (instance)
@@ -28,39 +33,55 @@ public class GameManager : MonoBehaviour
         else
         {
             instance = this;
-        }    
-    }
-    void Start()
-    {
-        isGameActive = true;
-         StartCoroutine(SpawnHeli());
+        }
+   
     }
 
+    private void Start()
+    {
+
+    }
     IEnumerator SpawnHeli()
     {
-        while (true)
+        while (isGameActive)
         {
             yield return new WaitForSeconds(1);
-            //helicopterPP.SpawnHelicopter();
             SpawnHelicopter();
         }
 
     }
-
-
-
     public void GameStart()
     {
+        titleScreen.SetActive(false);
         isGameActive = true;
-       // InvokeRepeating("SpawnHeliCopter", 4f, Random.Range(minRate, maxRate));
-        //titleScreen.SetActive(false);
-        //SpawnHeliCopter();
+        ObjectPooler.SharedInstance.SetPooledObject();
+        StartCoroutine(SpawnHeli());
+        UpdateScore(0);
+
     }
 
+
+    public void UpdateScore(int point)
+    {
+        score += point;
+        ScoreText.text = "" + score;
+        ScoreGameOver.text = "" + score;
+    }    
+
+    public void GameOver()
+    {
+        gameOver.SetActive(true);
+        isGameActive = false;
+
+    }
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && isGameActive)
         {
             Instantiate(bulletFire, firePos.position, firePos.rotation);
         }
@@ -68,6 +89,7 @@ public class GameManager : MonoBehaviour
 
     public void SpawnHelicopter()
     {
+       
         GameObject helicopter = ObjectPooler.SharedInstance.GetPooledObject();
         if (helicopter != null)
         {
@@ -75,7 +97,6 @@ public class GameManager : MonoBehaviour
             helicopter.transform.position = spawnPoint;
             transform.position = helicopter.transform.position;
             helicopter.SetActive(true);
-            //SetupPosition();
         }
     }
 

@@ -28,9 +28,20 @@ public class BulletFire : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Helicopter") || collision.gameObject.CompareTag("Dog"))
+        if (collision.gameObject.CompareTag("Helicopter"))
         {
             Destroy(gameObject);
+
+        }
+
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Dog"))
+        {
+            Debug.Log("hoaGGGGGG");
+            rb2D.velocity = rb2D.velocity * 1.5f;
+            GetComponent<BoxCollider2D>().isTrigger = true;
         }
     }
 }

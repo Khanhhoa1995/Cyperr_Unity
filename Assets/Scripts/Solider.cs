@@ -9,27 +9,24 @@ public class Solider : MonoBehaviour
     private bool isTriggerGround;
     private Animator anim;
     public float DefaultSpeed;
+    private bool isFired;
+   // public PhysicsMaterial2D physicsMaterial2D;
+ 
  
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+       
     }
-
-    private void SetupDirection()
-    {
-
-    }    
     // Update is called once per frame
     void LateUpdate()
     {
-        if(isTriggerGround)
+        if(isTriggerGround && !isFired)
         {
-
             transform.Translate(speed * Time.deltaTime, 0, 0);
         }
-        
     }
     public void SetupPosition()
     {
@@ -45,14 +42,27 @@ public class Solider : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Ground"))
+        if(collision.gameObject.CompareTag("Ground") && !isFired)
         {
             isTriggerGround = true;
             anim.SetBool("isTriggerGround" , true);
             SetupPosition();
-
-           // change to direction if it not right. it's base on the player.  
+        }
+        if(collision.gameObject.CompareTag("BulletFire"))
+        {
+            GameManager.instance.UpdateScore(1);
+            rb2D.velocity = Vector2.zero;
+            rb2D.AddForce(Vector2.zero);
+            isFired = true;
+            anim.SetBool("isFired", true);
+            StartCoroutine(WaitToDestroy());
         }
     }
+    IEnumerator WaitToDestroy()
+    {
+        rb2D.velocity = Vector2.zero;
+        yield return new WaitForSeconds(5);
+        Destroy(gameObject);
+    }    
     
 }

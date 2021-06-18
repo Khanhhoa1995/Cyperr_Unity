@@ -12,6 +12,7 @@ public class Helicopter : MonoBehaviour
     public float minSpawnDog;
     public float maxSpawnDog;
     private SpriteRenderer spriteRenderer;
+    public GameObject fragments;
 
     private Animator anim;
     public ParticleSystem particalSystem;
@@ -72,7 +73,10 @@ public class Helicopter : MonoBehaviour
         }
         if(collision.gameObject.CompareTag("BulletFire"))
         {
+            GameManager.instance.UpdateScore(1);
+           // Destroy(collision.gameObject); 
            StartCoroutine(PlayAnimAndWaitDestroy());
+            Instantiate(fragments, transform.position, Quaternion.identity);
         }    
     }
     private IEnumerator PlayAnimAndWaitDestroy()

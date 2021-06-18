@@ -4962,6 +4962,8 @@ MonoBehaviour:
     type: 3}
   minSpawnDog: 1
   maxSpawnDog: 5
+  fragments: {fileID: 4332924460961854169, guid: 1556663d798670643a1e5ad3724ca6ac,
+    type: 3}
   particalSystem: {fileID: 255576897}
 --- !u!95 &106791979
 Animator:
