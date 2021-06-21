@@ -39,8 +39,7 @@ public class BulletFire : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Dog"))
         {
-            Debug.Log("hoaGGGGGG");
-            rb2D.velocity = rb2D.velocity * 1.5f;
+           //rb2D.velocity = rb2D.velocity * 1.2f;
             GetComponent<BoxCollider2D>().isTrigger = true;
         }
     }

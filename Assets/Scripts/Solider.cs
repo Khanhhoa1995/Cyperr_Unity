@@ -10,6 +10,7 @@ public class Solider : MonoBehaviour
     private Animator anim;
     public float DefaultSpeed;
     private bool isFired;
+    public Transform bulletFire;
    // public PhysicsMaterial2D physicsMaterial2D;
  
  
@@ -18,7 +19,6 @@ public class Solider : MonoBehaviour
     {
         rb2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-       
     }
     // Update is called once per frame
     void LateUpdate()
@@ -32,6 +32,7 @@ public class Solider : MonoBehaviour
     {
         if (transform.position.x >= 0.0f)
         {
+           
             speed = -DefaultSpeed;
         }
         else
@@ -47,21 +48,27 @@ public class Solider : MonoBehaviour
             isTriggerGround = true;
             anim.SetBool("isTriggerGround" , true);
             SetupPosition();
+            gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
         }
         if(collision.gameObject.CompareTag("BulletFire"))
         {
             GameManager.instance.UpdateScore(1);
-            rb2D.velocity = Vector2.zero;
-            rb2D.AddForce(Vector2.zero);
+          //  rb2D.velocity = Vector2.zero;
+            rb2D.AddForce(transform.up * 5, ForceMode2D.Impulse);
             isFired = true;
             anim.SetBool("isFired", true);
             StartCoroutine(WaitToDestroy());
+            gameObject.GetComponent<BoxCollider2D>().isTrigger = false;
         }
+        if(collision.gameObject.CompareTag("Cat") && isFired)
+        {
+            gameObject.GetComponent<BoxCollider2D>().isTrigger = true;
+        }    
     }
     IEnumerator WaitToDestroy()
     {
         rb2D.velocity = Vector2.zero;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
         Destroy(gameObject);
     }    
     

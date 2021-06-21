@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     private int score;
 
     public GameObject gameOver;
+    public AudioClip SoundButton, explosionPlane, fireDie;
+    public AudioSource EffectSource;
     private void Awake()
     {
         if (instance)
@@ -39,7 +41,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
+        //EffectSource = GetComponent<AudioSource>();
+    }
+    public void Play(AudioClip clip)
+    {
+        EffectSource.clip = clip;
+        EffectSource.Play();
     }
     IEnumerator SpawnHeli()
     {
@@ -57,6 +64,7 @@ public class GameManager : MonoBehaviour
         ObjectPooler.SharedInstance.SetPooledObject();
         StartCoroutine(SpawnHeli());
         UpdateScore(0);
+        Play(SoundButton);
 
     }
 
@@ -77,6 +85,7 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Play(SoundButton);
     }
 // Update is called once per frame
     void Update()

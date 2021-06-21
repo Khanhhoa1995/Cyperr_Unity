@@ -77,7 +77,7 @@ SpriteRenderer:
   m_Sprite: {fileID: 8079465181741307060, guid: 1e422ae1d255ba54dbdf5545cd07ba2e,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1.55}
@@ -166,3 +166,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   DefaultSpeed: 1
+  bulletFire: {fileID: 6178626243262597711, guid: 7ef3bb1c13ffc2a45982d6932c89ea05,
+    type: 3}

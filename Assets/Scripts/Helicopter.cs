@@ -53,6 +53,7 @@ public class Helicopter : MonoBehaviour
             speed = DefaultSpeed;
         }    
        spriteRenderer.flipX = speed < 0 ? true : false;
+       dogPrefabs.GetComponent<SpriteRenderer>().flipX = speed < 0 ? true : false;
     }
    
     public IEnumerator WaitToSpawnDog()
@@ -83,6 +84,7 @@ public class Helicopter : MonoBehaviour
     {
         anim.SetBool("isFired", true);
         particalSystem.Play();
+        GameManager.instance.Play(GameManager.instance.explosionPlane);
         yield return new WaitForSeconds(0.45f);
         gameObject.SetActive(false);
      }    
